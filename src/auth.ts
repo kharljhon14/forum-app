@@ -1,7 +1,7 @@
 import Github from 'next-auth/providers/github';
 import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import { db } from '@/db';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import { Adapter } from 'next-auth/adapters';
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
@@ -16,11 +16,20 @@ export const {
   signIn,
   signOut
 } = NextAuth({
-  adapter: PrismaAdapter(db) as Adapter,
   providers: [
     Github({
       clientId: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET
     })
-  ]
+  ],
+  adapter: PrismaAdapter(db) as any,
+  callbacks: {
+    // usually not needed fixing bug in nexauth
+    async session({ session, user }: any) {
+      if (session && user) {
+        session.user.id = user.id;
+      }
+      return session;
+    }
+  }
 });
