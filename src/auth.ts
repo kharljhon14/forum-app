@@ -22,7 +22,7 @@ export const {
       clientSecret: GITHUB_CLIENT_SECRET
     })
   ],
-  adapter: PrismaAdapter(db) as any,
+  adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
     // usually not needed fixing bug in nexauth
     async session({ session, user }: any) {
