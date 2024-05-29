@@ -1,9 +1,50 @@
 import { auth } from '@/auth';
-import { Input, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
+import {
+  Avatar,
+  Button,
+  Input,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem
+} from '@nextui-org/react';
 import Link from 'next/link';
+import { ReactNode } from 'react';
 
 export default async function Header() {
   const session = await auth();
+  let authContent: ReactNode;
+
+  if (session?.user)
+    authContent = (
+      <Avatar
+        src={session.user.image || ''}
+        alt="User"
+      />
+    );
+  else
+    authContent = (
+      <>
+        <NavbarItem>
+          <Button
+            type="submit"
+            color="secondary"
+            variant="bordered"
+          >
+            Sign In
+          </Button>
+        </NavbarItem>
+        <NavbarItem>
+          <Button
+            type="submit"
+            color="primary"
+            variant="flat"
+          >
+            Sign Up
+          </Button>
+        </NavbarItem>
+      </>
+    );
 
   return (
     <Navbar className="shadow mb-6">
@@ -18,9 +59,7 @@ export default async function Header() {
       <NavbarContent justify="center">
         <Input placeholder="Search" />
       </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem>{session?.user ? <div>Signed In</div> : <div>Signed Out</div>}</NavbarItem>
-      </NavbarContent>
+      <NavbarContent justify="end">{authContent}</NavbarContent>
     </Navbar>
   );
 }
