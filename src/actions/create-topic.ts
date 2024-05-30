@@ -1,7 +1,7 @@
 'use server';
 
-import CreateTopicForm from '@/components/topics/CreateTopicForm';
 import { z } from 'zod';
+import { auth } from '@/auth';
 
 const createTopicSchema = z.object({
   name: z
@@ -15,6 +15,7 @@ interface CreateTopicFormState {
   errors: {
     name?: string[];
     description?: string[];
+    _form?: string[];
   };
 }
 
@@ -34,6 +35,15 @@ export async function createTopic(
   }
 
   // Todo: Revalidate the home page
+
+  const session = await auth();
+  if (!session?.user || !session) {
+    return {
+      errors: {
+        _form: ['You must be signed in to do this.']
+      }
+    };
+  }
 
   return { errors: {} };
 }
