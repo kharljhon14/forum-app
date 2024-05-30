@@ -1,7 +1,12 @@
 'use server';
 
+import type { Topic } from '@prisma/client';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { auth } from '@/auth';
+import { db } from '@/db';
+import paths from '@/paths';
+import { revalidatePath } from 'next/cache';
 
 const createTopicSchema = z.object({
   name: z
@@ -20,7 +25,7 @@ interface CreateTopicFormState {
 }
 
 export async function createTopic(
-  formState: CreateTopicFormState,
+  _formState: CreateTopicFormState,
   formData: FormData
 ): Promise<CreateTopicFormState> {
   const result = createTopicSchema.safeParse({
@@ -45,5 +50,30 @@ export async function createTopic(
     };
   }
 
-  return { errors: {} };
+  let topic: Topic;
+  try {
+    topic = await db.topic.create({
+      data: {
+        slug: result.data.name,
+        description: result.data.description
+      }
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        errors: {
+          _form: [error.message]
+        }
+      };
+    } else {
+      return {
+        errors: {
+          _form: ['Something went wrong!']
+        }
+      };
+    }
+  }
+
+  revalidatePath(paths.homePath());
+  redirect(paths.topicShow(topic.slug));
 }

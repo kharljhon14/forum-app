@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Button,
   Input,
@@ -12,7 +13,6 @@ import * as actions from '@/actions';
 
 export default function CreateTopicForm() {
   const [formState, action] = useFormState(actions.createTopic, { errors: {} });
-
   return (
     <Popover placement="left">
       <PopoverTrigger>
