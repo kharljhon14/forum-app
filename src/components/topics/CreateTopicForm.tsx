@@ -10,6 +10,7 @@ import {
 } from '@nextui-org/react';
 import { useFormState } from 'react-dom';
 import * as actions from '@/actions';
+import FormButton from '../common/FormButton';
 
 export default function CreateTopicForm() {
   const [formState, action] = useFormState(actions.createTopic, { errors: {} });
@@ -19,7 +20,10 @@ export default function CreateTopicForm() {
         <Button color="primary">Create a Topic</Button>
       </PopoverTrigger>
       <PopoverContent>
-        <form action={action}>
+        <form
+          autoComplete="off"
+          action={action}
+        >
           <div className="flex flex-col gap-4 p-4 w-80">
             <h3 className="text-lg">Create a Topic</h3>
             <Input
@@ -44,7 +48,7 @@ export default function CreateTopicForm() {
                 {formState.errors._form.join(', ')}
               </div>
             ) : null}
-            <Button type="submit">Submit</Button>
+            <FormButton>Submit</FormButton>
           </div>
         </form>
       </PopoverContent>
