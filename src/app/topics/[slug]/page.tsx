@@ -1,3 +1,5 @@
+import CreatePostForm from '@/components/posts/CreatePostForm';
+
 interface Props {
   params: {
     slug: string;
@@ -12,7 +14,9 @@ export default function TopicShowPage({ params }: Props) {
       <div className="col-span-3">
         <h1 className="text-2xl font-bold mb-2">{slug}</h1>
       </div>
-      <div></div>
+      <div>
+        <CreatePostForm />
+      </div>
     </div>
   );
 }
