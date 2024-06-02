@@ -5,6 +5,8 @@ import { auth } from '@/auth';
 import paths from '@/paths';
 import { z } from 'zod';
 import { db } from '@/db';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 const createPostSchema = z.object({
   title: z.string().min(3),
@@ -37,7 +39,7 @@ export async function createPost(
 
   const session = await auth();
 
-  if (session?.user) {
+  if (!session?.user) {
     return {
       errors: {
         _form: ['You must be signed in to do this.']
@@ -55,7 +57,16 @@ export async function createPost(
     };
   }
 
+  let post: Post;
   try {
+    post = await db.post.create({
+      data: {
+        title: result.data.title,
+        content: result.data.content,
+        userId: session.user.id as string,
+        topicId: topic.id
+      }
+    });
   } catch (error) {
     if (error instanceof Error) {
       return {
@@ -72,7 +83,6 @@ export async function createPost(
     }
   }
 
-  return {
-    errors: {}
-  };
+  revalidatePath(paths.topicShow(slug));
+  redirect(paths.postShow(slug, post.id));
 }
