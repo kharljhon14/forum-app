@@ -19,7 +19,10 @@ export default function CreatePostForm() {
         <Button color="primary">Create Post</Button>
       </PopoverTrigger>
       <PopoverContent>
-        <form autoComplete="off">
+        <form
+          autoComplete="off"
+          action={action}
+        >
           <div className="flex flex-col gap-4 p-4 w-80">
             <h3 className="text-lg">Create a Post</h3>
             <Input
