@@ -4,6 +4,7 @@ import type { Post } from '@prisma/client';
 import { auth } from '@/auth';
 import paths from '@/paths';
 import { z } from 'zod';
+import { db } from '@/db';
 
 const createPostSchema = z.object({
   title: z.string().min(3),
@@ -19,6 +20,7 @@ interface CreatePostFormState {
 }
 
 export async function createPost(
+  slug: string,
   _formState: CreatePostFormState,
   formData: FormData
 ): Promise<CreatePostFormState> {
@@ -39,6 +41,16 @@ export async function createPost(
     return {
       errors: {
         _form: ['You must be signed in to do this.']
+      }
+    };
+  }
+
+  const topic = await db.topic.findFirst({ where: { slug } });
+
+  if (!topic) {
+    return {
+      errors: {
+        _form: ['Cannot find topic']
       }
     };
   }
