@@ -8,7 +8,11 @@ import {
 } from '@nextui-org/react';
 import FormButton from '../common/FormButton';
 
+import * as actions from '@/actions';
+import { useFormState } from 'react-dom';
+
 export default function CreatePostForm() {
+  const [formState, action] = useFormState(actions.createPost, { errors: {} });
   return (
     <Popover placement="left">
       <PopoverTrigger>
@@ -23,19 +27,23 @@ export default function CreatePostForm() {
               label="Title"
               labelPlacement="outside"
               placeholder="Title"
+              isInvalid={!!formState.errors.title}
+              errorMessage={formState.errors.title?.join(', ')}
             />
             <Textarea
               name="content"
               label="Content"
               labelPlacement="outside"
               placeholder="Describe your content"
+              isInvalid={!!formState.errors.content}
+              errorMessage={formState.errors.content?.join(', ')}
             />
 
-            {/* {formState.errors._form ? (
+            {formState.errors._form ? (
               <div className="p-2 bg-red-200 border text-red-700 border-red-400 text-xs rounded">
                 {formState.errors._form.join(', ')}
               </div>
-            ) : null} */}
+            ) : null}
             <FormButton>Submit</FormButton>
           </div>
         </form>
