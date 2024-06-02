@@ -33,6 +33,33 @@ export async function createPost(
     };
   }
 
+  const session = await auth();
+
+  if (session?.user) {
+    return {
+      errors: {
+        _form: ['You must be signed in to do this.']
+      }
+    };
+  }
+
+  try {
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        errors: {
+          _form: [error.message]
+        }
+      };
+    } else {
+      return {
+        errors: {
+          _form: ['Something went wrong!']
+        }
+      };
+    }
+  }
+
   return {
     errors: {}
   };

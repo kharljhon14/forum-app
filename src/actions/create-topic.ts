@@ -39,8 +39,6 @@ export async function createTopic(
     };
   }
 
-  // Todo: Revalidate the home page
-
   const session = await auth();
   if (!session?.user || !session) {
     return {
