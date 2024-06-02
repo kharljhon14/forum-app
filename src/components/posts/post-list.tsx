@@ -1,10 +1,10 @@
 import type { Post, User, Topic } from '@prisma/client';
 import Link from 'next/link';
 import paths from '@/paths';
-import { PostWithData } from '@/db/queries/post';
+import { EnrichedPost } from '@/db/queries/post';
 
 interface Props {
-  fetchData: () => Promise<PostWithData[]>;
+  fetchData: () => Promise<EnrichedPost[]>;
 }
 
 export default async function PostList({ fetchData }: Props) {
