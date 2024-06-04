@@ -1,4 +1,3 @@
-import type { Post } from '@prisma/client';
 import { db } from '..';
 
 // export type EnrichedPost = Post & {
@@ -23,5 +22,26 @@ export function fetchPostsByTopicSlug(slug: string) {
       user: { select: { name: true } },
       _count: { select: { comments: true } }
     }
+  });
+}
+
+export function fetchTopPosts(): Promise<EnrichedPost[]> {
+  return db.post.findMany({
+    orderBy: [
+      {
+        comments: {
+          _count: 'desc'
+        }
+      }
+    ],
+    include: {
+      topic: {
+        select: { slug: true }
+      },
+
+      user: { select: { name: true, image: true } },
+      _count: { select: { comments: true } }
+    },
+    take: 5
   });
 }
