@@ -1,5 +1,16 @@
+'use client';
+
 import { Input } from '@nextui-org/react';
 
+import { useSearchParams } from 'next/navigation';
+
 export default function SearchInput() {
-  return <Input placeholder="Search" />;
+  const searchParams = useSearchParams();
+
+  return (
+    <Input
+      defaultValue={searchParams.get('q') || ''}
+      placeholder="Search"
+    />
+  );
 }
