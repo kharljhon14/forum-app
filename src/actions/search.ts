@@ -7,6 +7,7 @@ export async function search(formData: FormData) {
   const searchTerm = formData.get('search-term');
 
   if (typeof searchTerm !== 'string' || !searchTerm) {
+    console.log(searchTerm);
     redirect(paths.homePath());
   }
 
